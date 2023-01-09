@@ -113,6 +113,27 @@ The supported field types in the struct are:
 
 Unsupported types are simply ignored, however custom types can be registered to be converted.
 
+## Register a Custom Converter
+Below the sample, a custom converter parses array data into an array string.
+
+You have requested `/search?roles=user,admin,manager`, the expectation the query will be parsed into `[]string`.
+
+```
+type User struct {
+    Roles []string `schema: "roles"`
+}
+
+var user User
+
+decoder.RegisterConverter([]string{}, func(input string) reflect.Value {
+	return reflect.ValueOf(strings.Split(input, ","))
+})
+
+if err := decoder.Decode(&user, r.URL().Quer()); err != nil {
+    // do something
+}
+```
+
 ## License
 
 BSD licensed. See the LICENSE file for details.
