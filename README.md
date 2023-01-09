@@ -119,7 +119,7 @@ Below the sample, a custom converter parses array data into an array string.
 
 You have requested `/search?roles=user,admin,manager`, the expectation the query will be parsed into `[]string`.
 
-```
+```go
 type User struct {
     Roles []string `schema: "roles"`
 }
