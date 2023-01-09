@@ -1,6 +1,7 @@
 schema
 ======
 [![GoDoc](https://godoc.org/github.com/muhfaris/schema?status.svg)](https://godoc.org/github.com/muhfaris/schema)
+[![Go](https://github.com/muhfaris/schema/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/muhfaris/schema/actions/workflows/go.yml)
 ---
 
 **The Gorilla project has been archived, and is no longer under active maintainenance. You can read more here: https://github.com/gorilla#gorilla-toolkit**
