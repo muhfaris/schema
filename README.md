@@ -1,9 +1,7 @@
 schema
 ======
-[![GoDoc](https://godoc.org/github.com/gorilla/schema?status.svg)](https://godoc.org/github.com/gorilla/schema)
-[![CircleCI](https://circleci.com/gh/gorilla/mux.svg?style=svg)](https://circleci.com/gh/gorilla/schema)
-[![Sourcegraph](https://sourcegraph.com/github.com/gorilla/schema/-/badge.svg)](https://sourcegraph.com/github.com/gorilla/schema?badge)
-
+[![GoDoc](https://godoc.org/github.com/muhfaris/schema?status.svg)](https://godoc.org/github.com/muhfaris/schema)
+[![Go](https://github.com/muhfaris/schema/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/muhfaris/schema/actions/workflows/go.yml)
 ---
 
 **The Gorilla project has been archived, and is no longer under active maintainenance. You can read more here: https://github.com/gorilla#gorilla-toolkit**
@@ -42,6 +40,33 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 
     // Do something with person.Name or person.Phone
 }
+
+```
+Or parse GET from query
+
+```go
+// Set a Decoder instance as a package global, because it caches
+// meta-data about structs, and an instance can be shared safely.
+var decoder = schema.NewDecoder()
+
+type Person struct {
+    Name  string `schema:"name"`
+    Phone string `schema:"phone"`
+}
+
+func GetMyHandler(w http.ResponseWriter, r *http.Request) {
+    var person Person
+
+    err = decoder.Decode(&person, r.URL.Query())
+    if err != nil {
+        // Handle error
+    }
+
+    // Do something with person.Name or person.Phone
+}
+
+// curl http://localhost/get-my-handler?name=muhfaris&phone=0812345678
+
 ```
 
 Conversely, contents of a struct can be encoded into form values. Here's a variant of the previous example using the Encoder:
@@ -89,7 +114,26 @@ The supported field types in the struct are:
 
 Unsupported types are simply ignored, however custom types can be registered to be converted.
 
-More examples are available on the Gorilla website: https://www.gorillatoolkit.org/pkg/schema
+## Register a Custom Converter
+Below the sample, a custom converter parses array data into an array string.
+
+You have requested `/search?roles=user,admin,manager`, the expectation the query will be parsed into `[]string`.
+
+```go
+type User struct {
+    Roles []string `schema: "roles"`
+}
+
+var user User
+
+decoder.RegisterConverter([]string{}, func(input string) reflect.Value {
+	return reflect.ValueOf(strings.Split(input, ","))
+})
+
+if err := decoder.Decode(&user, r.URL().Quer()); err != nil {
+    // do something
+}
+```
 
 ## License
 
